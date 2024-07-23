@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -107,6 +108,7 @@ public class BoardDAO {
 		if (conn != null)  try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 	}
 	
+	// 게시글 등록 메서드
 	//    serlvet               db
 	public void insertBoard(BoardDTO boardDTO) {
 		
@@ -136,6 +138,94 @@ public class BoardDAO {
 		
 	}
 	
+	// 게시물 조회 메서드
+	public ArrayList<BoardDTO> getBoardList() { // BoardDTO 객체를 ArrayList로 반환하는 메서드
+		
+		ArrayList<BoardDTO> boardList = new ArrayList<BoardDTO>();
+		
+		try {
+			// 데이터베이스 연결
+			getConnection();
+			
+			// 데이터베이스에서 게시물 목록을 조회하는 로직을 여기에 추가
+			pstmt = conn.prepareStatement("SELECT * FROM BOARD"); // 패스
+			rs = pstmt.executeQuery(); // executeQuery(); > selectQuery 실행 // selectQuery 실행하여 결과 집합을 반환
+			
+			// 결과 집합을 순회하며 BoardDTO 객체를 생성하고 리스트에 추가
+			while(rs.next()) {
+				
+				BoardDTO boardDTO = new BoardDTO();
+				boardDTO.setBoardId(rs.getLong("BOARD_ID"));
+				boardDTO.setWriter(rs.getString("WRITER"));
+				boardDTO.setEnrollDt(rs.getDate("ENROLL_DT"));
+				boardDTO.setSubject(rs.getString("SUBJECT"));
+				boardDTO.setReadCnt(rs.getLong("READ_CNT"));
+				
+				// 리스트에 추가
+				boardList.add(boardDTO);
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			getClose();
+		}
+		
+		System.out.println("DAO boardList : " + boardList);
+		
+		// 조회한 게시물 목록을 반환
+		return boardList;
+	}
+	
+	// 게시물 상세조회 메서드
+	public BoardDTO getBoardDetail(long boardId) {
+		
+		BoardDTO boardDTO = new BoardDTO();
+
+		try {
+			getConnection();
+			
+			// 조회수 증가
+			String sql = """
+					UPDATE BOARD
+					SET	   READ_CNT = READ_CNT + 1
+					WHERE  BOARD_ID = ?
+					""";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, boardId);
+			pstmt.executeUpdate();
+			
+			// 1개의 커뮤니티 게시글 정보 반환
+			sql = """
+					SELECT * 
+					FROM   BOARD
+					WHERE  BOARD_ID = ?
+					""";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, boardId);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				boardDTO.setBoardId(rs.getLong("BOARD_ID"));
+				boardDTO.setWriter(rs.getString("WRITER"));
+				boardDTO.setContent(rs.getString("CONTENT"));
+				boardDTO.setEmail(rs.getString("EMAIL"));
+				boardDTO.setSubject(rs.getString("SUBJECT"));
+				boardDTO.setReadCnt(rs.getLong("READ_CNT"));
+			}
+			
+		} catch(Exception e) {
+			
+		} finally {
+			getClose();
+		}
+		
+		System.out.println("DAO boardDetail : " + boardDTO);
+		
+		return boardDTO;
+	}
 	
 	
 }

@@ -1,6 +1,7 @@
 package step01_board.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -41,9 +42,18 @@ public class WriteBoard extends HttpServlet {
 		
 		BoardDAO.getInstance().insertBoard(boardDTO);
 		
-		
 		// 리액션
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter pw = response.getWriter(); // Spring에서의 @ResponseBody
 		
+		String jsScript = """
+				<script>
+					alert('게시글이 등록되었습니다.');
+					location.href='bList';
+				</script>
+				"""; // location.href='url'; > 해당 url로 이동하는 자바스크립트 함수
+		
+		pw.print(jsScript);
 	}
 
 }
