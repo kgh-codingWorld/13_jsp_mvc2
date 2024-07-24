@@ -141,7 +141,7 @@ public class BoardDAO {
 	// 게시물 조회 메서드
 	public ArrayList<BoardDTO> getBoardList() { // BoardDTO 객체를 ArrayList로 반환하는 메서드
 		
-		ArrayList<BoardDTO> boardList = new ArrayList<BoardDTO>();
+		ArrayList<BoardDTO> boardList = new ArrayList<BoardDTO>(); // BoardDTO 객체들을 모아 관리하는 컬렉션이다.
 		
 		try {
 			// 데이터베이스 연결
@@ -154,7 +154,7 @@ public class BoardDAO {
 			// 결과 집합을 순회하며 BoardDTO 객체를 생성하고 리스트에 추가
 			while(rs.next()) {
 				
-				BoardDTO boardDTO = new BoardDTO();
+				BoardDTO boardDTO = new BoardDTO(); // 게시물 하나의 데이터를 저장하고 전달하는 역할을 한다.
 				boardDTO.setBoardId(rs.getLong("BOARD_ID"));
 				boardDTO.setWriter(rs.getString("WRITER"));
 				boardDTO.setEnrollDt(rs.getDate("ENROLL_DT"));
