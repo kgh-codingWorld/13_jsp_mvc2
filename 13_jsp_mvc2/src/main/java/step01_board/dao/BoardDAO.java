@@ -217,7 +217,7 @@ public class BoardDAO {
 			}
 			
 		} catch(Exception e) {
-			
+			e.printStackTrace();
 		} finally {
 			getClose();
 		}
@@ -227,6 +227,63 @@ public class BoardDAO {
 		return boardDTO;
 	}
 	
+	public boolean checkAuthenticationUser(BoardDTO boardDTO) {
+		
+		boolean isAuthentication = false;
+		
+		try {
+			getConnection();
+			
+			String sql = """
+					SELECT	*
+					FROM	BOARD
+					WHERE	BOARD_ID = ?
+					AND 	PASSWORD = ?
+					""";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, boardDTO.getBoardId());
+			pstmt.setString(2, boardDTO.getPassword());
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				isAuthentication = true;
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			getClose();
+		}
+		
+		return isAuthentication;
+	}
+	
+	public void updateBoard(BoardDTO boardDTO) {
+		
+		try {
+			getConnection();
+			
+			String sql = """
+					UPDATE BOARD
+					SET    SUBJECT = ?,
+						   CONTENT = ?,
+					WHERE  BOARD_ID = ?
+					""";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, boardDTO.getSubject());
+			pstmt.setString(2, boardDTO.getContent());
+			pstmt.setLong(3, boardDTO.getBoardId());
+			pstmt.executeUpdate();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			getClose();
+			
+		}
+	}
 	
 }
 
