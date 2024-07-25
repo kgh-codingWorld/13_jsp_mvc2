@@ -17,24 +17,28 @@ import step01_board.dto.BoardDTO;
 public class UpdateBoard extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-       
-	// update 화면으로 이동
+    
+	// update화면으로 이동
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+	
 		long boardId = Long.parseLong(request.getParameter("boardId"));
 		
+		// 수정할 게시글 정보를 가져온다.
 		BoardDTO boardDTO = BoardDAO.getInstance().getBoardDetail(boardId);
+		
 		request.setAttribute("boardDTO", boardDTO);
 		
 		RequestDispatcher dis = request.getRequestDispatcher("step01_boardEx/bUpdate.jsp");
 		dis.forward(request, response);
-	}
 	
+	}
+
 	// update 처리 로직
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+	
 		request.setCharacterEncoding("utf-8");
 		
+		// DTO 타입으로 DAO에 전달한다.
 		BoardDTO boardDTO = new BoardDTO();
 		boardDTO.setBoardId(Long.parseLong(request.getParameter("boardId")));
 		boardDTO.setSubject(request.getParameter("subject"));
@@ -42,9 +46,16 @@ public class UpdateBoard extends HttpServlet {
 		
 		BoardDAO.getInstance().updateBoard(boardDTO);
 		
+		// 리액션
+		String jsScript = """
+				   <script>
+					   alert('수정 되었습니다.');
+					   location.href = 'bList';
+				   </script>""";
+		
 		response.setContentType("text/html; charset=utf-8");
 		PrintWriter out = response.getWriter();	
-		out.print(out);
+		out.print(jsScript);
 		
 	}
 

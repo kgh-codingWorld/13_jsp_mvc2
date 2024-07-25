@@ -108,7 +108,6 @@ public class BoardDAO {
 		if (conn != null)  try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 	}
 	
-	// 게시글 등록 메서드
 	//    serlvet               db
 	public void insertBoard(BoardDTO boardDTO) {
 		
@@ -138,67 +137,69 @@ public class BoardDAO {
 		
 	}
 	
-	// 게시물 조회 메서드
-	public ArrayList<BoardDTO> getBoardList() { // BoardDTO 객체를 ArrayList로 반환하는 메서드
-		
-		ArrayList<BoardDTO> boardList = new ArrayList<BoardDTO>(); // BoardDTO 객체들을 모아 관리하는 컬렉션이다.
+	
+	public ArrayList<BoardDTO> getBoardList() {
+		 
+		ArrayList<BoardDTO> boardList = new ArrayList<BoardDTO>();
 		
 		try {
-			// 데이터베이스 연결
+			
 			getConnection();
 			
-			// 데이터베이스에서 게시물 목록을 조회하는 로직을 여기에 추가
-			pstmt = conn.prepareStatement("SELECT * FROM BOARD"); // 패스
-			rs = pstmt.executeQuery(); // executeQuery(); > selectQuery 실행 // selectQuery 실행하여 결과 집합을 반환
+			pstmt = conn.prepareStatement("SELECT * FROM BOARD");
+			rs = pstmt.executeQuery(); // executeQuery(); > select쿼리 실행
 			
-			// 결과 집합을 순회하며 BoardDTO 객체를 생성하고 리스트에 추가
-			while(rs.next()) {
+			while (rs.next()) {
 				
-				BoardDTO boardDTO = new BoardDTO(); // 게시물 하나의 데이터를 저장하고 전달하는 역할을 한다.
+				// 테이블 컬럼 <> 자바 필드 매핑
+				BoardDTO boardDTO = new BoardDTO();
 				boardDTO.setBoardId(rs.getLong("BOARD_ID"));
 				boardDTO.setWriter(rs.getString("WRITER"));
-				boardDTO.setEnrollDt(rs.getDate("ENROLL_DT"));
 				boardDTO.setSubject(rs.getString("SUBJECT"));
+				boardDTO.setEnrollDt(rs.getDate("ENROLL_DT"));
 				boardDTO.setReadCnt(rs.getLong("READ_CNT"));
 				
-				// 리스트에 추가
 				boardList.add(boardDTO);
+			
 			}
 			
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			getClose();
 		}
 		
+		// CCTV
 		System.out.println("DAO boardList : " + boardList);
 		
-		// 조회한 게시물 목록을 반환
 		return boardList;
+		
 	}
 	
-	// 게시물 상세조회 메서드
+	
 	public BoardDTO getBoardDetail(long boardId) {
 		
 		BoardDTO boardDTO = new BoardDTO();
-
+		
 		try {
+			
 			getConnection();
+			
 			
 			// 조회수 증가
 			String sql = """
 					UPDATE BOARD
-					SET	   READ_CNT = READ_CNT + 1
+					SET    READ_CNT = READ_CNT + 1
 					WHERE  BOARD_ID = ?
 					""";
-			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setLong(1, boardId);
 			pstmt.executeUpdate();
 			
-			// 1개의 커뮤니티 게시글 정보 반환
+			
+			// 1개의 커뮤니티 게시글정보 반환
 			sql = """
-					SELECT * 
+					SELECT *
 					FROM   BOARD
 					WHERE  BOARD_ID = ?
 					""";
@@ -207,38 +208,45 @@ public class BoardDAO {
 			pstmt.setLong(1, boardId);
 			rs = pstmt.executeQuery();
 			
-			if(rs.next()) {
+			if (rs.next()) {
+				
 				boardDTO.setBoardId(rs.getLong("BOARD_ID"));
 				boardDTO.setWriter(rs.getString("WRITER"));
+				boardDTO.setSubject(rs.getString("SUBJECT"));
+				boardDTO.setEnrollDt(rs.getDate("ENROLL_DT"));
+				boardDTO.setReadCnt(rs.getLong("READ_CNT"));
 				boardDTO.setContent(rs.getString("CONTENT"));
 				boardDTO.setEmail(rs.getString("EMAIL"));
-				boardDTO.setSubject(rs.getString("SUBJECT"));
-				boardDTO.setReadCnt(rs.getLong("READ_CNT"));
+				
 			}
 			
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			getClose();
 		}
 		
+		// CCTV
 		System.out.println("DAO boardDetail : " + boardDTO);
 		
 		return boardDTO;
+		
 	}
 	
+	
 	public boolean checkAuthenticationUser(BoardDTO boardDTO) {
-		
-		boolean isAuthentication = false;
+	
+		boolean isAuthenticationUser = false;
 		
 		try {
+			
 			getConnection();
 			
 			String sql = """
-					SELECT	*
-					FROM	BOARD
-					WHERE	BOARD_ID = ?
-					AND 	PASSWORD = ?
+					SELECT *
+					FROM   BOARD
+					WHERE  BOARD_ID = ?
+					AND    PASSWORD = ?
 					""";
 			
 			pstmt = conn.prepareStatement(sql);
@@ -246,44 +254,48 @@ public class BoardDAO {
 			pstmt.setString(2, boardDTO.getPassword());
 			rs = pstmt.executeQuery();
 			
-			if(rs.next()) {
-				isAuthentication = true;
+			if (rs.next()) { // 아이디와 비번이 맞으면
+				isAuthenticationUser = true;
 			}
 			
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			getClose();
 		}
 		
-		return isAuthentication;
+		return isAuthenticationUser;
+	
 	}
+	
 	
 	public void updateBoard(BoardDTO boardDTO) {
 		
 		try {
+			
 			getConnection();
-			
 			String sql = """
-					UPDATE BOARD
-					SET    SUBJECT = ?,
-						   CONTENT = ?,
-					WHERE  BOARD_ID = ?
+				UPDATE BOARD
+				SET    SUBJECT = ?,
+				       CONTENT = ?
+				WHERE  BOARD_ID = ?	
 					""";
-			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, boardDTO.getSubject());
 			pstmt.setString(2, boardDTO.getContent());
 			pstmt.setLong(3, boardDTO.getBoardId());
 			pstmt.executeUpdate();
 			
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			getClose();
-			
 		}
+		
 	}
+	
+	
+	
 	
 }
 

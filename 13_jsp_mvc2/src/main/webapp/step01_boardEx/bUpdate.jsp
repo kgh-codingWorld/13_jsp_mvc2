@@ -13,26 +13,26 @@
 			<table border="1">
 				<tr>
 					<td>작성자</td>
-					<td>${boardDTO.writer}</td>
+					<td>${boardDTO.writer }</td>
 				</tr>
 				<tr>
 					<td>작성일</td>
-					<td>${boardDTO.enrollDt}</td>
+					<td>${boardDTO.enrollDt }</td>
 				</tr>
 				<tr>
 					<td>제목</td>
-					<td><input type="text" name="subject" value="${boardDTO.subject}"/></td>
+					<td><input type="text" name="subject" value="${boardDTO.subject }"/></td>
 				</tr>
 				<tr>
 					<td>글내용</td>
 					<td>
-						<textarea rows="10" cols="60" name="content">${boardDTO.content}</textarea>
+						<textarea rows="10" cols="60" name="content">${boardDTO.content }</textarea>
 					</td>
 				</tr>
 				<tr align="center">
 					<td colspan="2">
-						<input type="hidden" name="boardId" value="${boardDTO.boardId}"/>
-						<input type="submit" value="수정하기" onclick="location.href='bList';"/>
+						<input type="hidden" name="boardId" value="${boardDTO.boardId }"/>
+						<input type="submit" value="수정하기" />
 						<input type="button" value="목록보기" onclick="location.href='bList'" />
 					</td>
 				</tr>

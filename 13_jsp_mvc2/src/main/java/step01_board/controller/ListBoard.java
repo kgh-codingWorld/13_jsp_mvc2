@@ -17,15 +17,19 @@ import step01_board.dto.BoardDTO;
 public class ListBoard extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-
+	
+	// 커뮤니티게시글 전체조회 화면으로 이동 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
 		ArrayList<BoardDTO> boardList = BoardDAO.getInstance().getBoardList();
 		
-		request.setAttribute("boardList", boardList);
+		// bList.jsp파일에 전체게시글을 전송한다.
+		request.setAttribute("boardList" , boardList);
 		
+		// bList.jsp파일로 이동
 		RequestDispatcher dis = request.getRequestDispatcher("step01_boardEx/bList.jsp");
 		dis.forward(request, response);
+	
 	}
 
 }

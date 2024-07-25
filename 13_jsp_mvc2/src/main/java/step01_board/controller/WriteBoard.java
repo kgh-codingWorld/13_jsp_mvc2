@@ -39,21 +39,21 @@ public class WriteBoard extends HttpServlet {
 		boardDTO.setPassword(request.getParameter("password"));
 		boardDTO.setContent(request.getParameter("content"));
 		
-		
 		BoardDAO.getInstance().insertBoard(boardDTO);
 		
 		// 리액션
 		response.setContentType("text/html; charset=UTF-8");
-		PrintWriter pw = response.getWriter(); // Spring에서의 @ResponseBody
+		PrintWriter pw = response.getWriter();
 		
 		String jsScript = """
 				<script>
 					alert('게시글이 등록되었습니다.');
-					location.href='bList';
+					location.href = 'bList';
 				</script>
-				"""; // location.href='url'; > 해당 url로 이동하는 자바스크립트 함수
+				"""; // location.href = 'url'; > 해당url로 이동하는 자바스크립트 함수
 		
 		pw.print(jsScript);
+		
 	}
 
 }

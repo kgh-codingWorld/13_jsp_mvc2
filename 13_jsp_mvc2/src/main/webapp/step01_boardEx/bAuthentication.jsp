@@ -28,10 +28,9 @@
 					<td><input type="password" name="password"></td>
 				</tr>
 			</table>
-			<p>	<!-- name이 없으면 값이 넘어가지 않음 -->
-				<input type="hidden" name="boardId" value="${boardDTO.boardId}"/>
-				<input type="hidden" name="menu" value="${menu}"/>
-				<input type="hidden" name="boardId"/>
+			<p>
+				<input type="hidden" name="boardId" value="${boardDTO.boardId }"/>
+				<input type="hidden" name="menu" value="${menu }"/>
 				<input type="submit" value="인증" />
 				<input type="button" value="목록보기" onclick="location.href='bList'" />
 			</p>
