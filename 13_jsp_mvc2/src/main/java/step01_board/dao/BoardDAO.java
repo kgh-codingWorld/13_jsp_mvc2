@@ -294,7 +294,28 @@ public class BoardDAO {
 		
 	}
 	
-	
+	public void deleteBoard(long boardId) {
+		
+		try {
+			
+			getConnection();
+			
+			String sql = """
+				DELETE FROM BOARD
+				WHERE       BOARD_ID = ?	
+					""";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, boardId);
+			pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			getClose();
+		}
+		
+	}
 	
 	
 }

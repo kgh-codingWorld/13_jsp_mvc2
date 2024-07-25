@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <title>bUpdate</title>
+<script src="resources/ckeditor/ckeditor.js"></script>
 </head>
 <body>
 
@@ -27,6 +28,7 @@
 					<td>글내용</td>
 					<td>
 						<textarea rows="10" cols="60" name="content">${boardDTO.content }</textarea>
+						<script>CKEDITOR.replace("content");</script>
 					</td>
 				</tr>
 				<tr align="center">
