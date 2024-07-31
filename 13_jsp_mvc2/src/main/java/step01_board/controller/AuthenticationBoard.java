@@ -70,24 +70,6 @@ public class AuthenticationBoard extends HttpServlet {
 		}
 		else {
 			
-			/*
-			  
-				# history 객체
-	
-				- 사용자가 방문한 url 정보로 이동하는 객체
-	
-				[ 페이지 관련 기능 ]
-				history.go(-1); 	// 한페이지 뒤로 이동
-				history.back();		// 한페이지 뒤로 이동
-	
-				history.go(1);		// 한페이지 앞으로 이동
-				history.forward(); 	// 한페이지 앞으로 이동
-				
-				history.go(n);		// n페이지 앞으로 이동
-				history.go(-n);		// n페이지 뒤로 이동
-			
-			*/
-		
 			jsScript = """
 					<script>
 						alert('패스워드를 확인하세요.');
